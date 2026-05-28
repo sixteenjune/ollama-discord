@@ -1,0 +1,53 @@
+services:
+  discord_bot:
+    cpu_shares: 90
+    command:
+      - pip install --no-cache-dir -r /app/data/requirements.txt && python /app/data/main.py
+    container_name: discord_bot
+    deploy:
+      resources:
+        limits:
+          memory: 11667M
+    entrypoint:
+      - sh
+      - -c
+    environment:
+      - DISCORD_TOKEN=token
+      - MEMORY_FILE=/app/data/user_memory.sqlite
+      - OLLAMA_URL=http://host.docker.internal:11434/api/chat
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    hostname: discord_bot
+    image: python:3.11-slim
+    labels:
+      icon: https://icon.casaos.io/main/all/discord_bot.png
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/discord_bot
+        target: /app/data
+    working_dir: /app
+    x-casaos:
+      architectures:
+        - amd64
+      description: Discord Bot (Reads the bot and requirements from /DATA/AppData/discord_bot)
+      main: discord_bot
+    ports: []
+    devices: []
+    cap_add: []
+    network_mode: bridge
+    privileged: false
+
+x-casaos:
+  author: self
+  category: self
+  hostname: ""
+  icon: https://icon.casaos.io/main/all/discord_bot.png
+  index: /
+  is_uncontrolled: false
+  port_map: ""
+  scheme: http
+  store_app_id: intelligent_theodore
+  title:
+    custom: Discord Ollama
+    en_us: discord_bot
